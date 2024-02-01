@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 1: R Basics'
-author: ""
-date: ""
+author: "David Askew"
+date: "1-31-2024"
 ---
 _This is the first in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document to a pdf, and upload it to canvas._
 
@@ -27,9 +27,16 @@ Numbers can be used to do arithmetic.
 ```
 
 (@) You try, multiple two numbers. 
+```{r}
+5*5
+```
 
 
-(@) Can you multiply two numbers and then divide by the result? 
+(@) Can you multiply two numbers and then divide by the result?
+```{r}
+10*10/5
+```
+
 
 The next type of value is a **string**. Strings are lines of text. Sometimes these are referred to as character vectors. To create a string, you add text between two quotation marks. For example: 
 ```{r}
@@ -38,7 +45,7 @@ The next type of value is a **string**. Strings are lines of text. Sometimes the
 
 (@) Try to create your own string.
 ```{r}
-
+"David is awesome"
 ```
 
 You can't add strings using `+` like you can numbers. But there is a function called `paste()` which concatenates character vectors into one. This function is _very_ useful and one you'll use a lot in a variety of circumstances. Here's what that looks like: 
@@ -49,12 +56,15 @@ paste("Hello", "Clemson Graduate Students")
 
 (@) Try it, add two strings together like the above example. 
 ```{r}
-
+paste("iHola!", "Estudiantes de Universidad de Clemson")
 ```
 
 (@) Can you explain what happened in 2-3 sentences? 
 
-> 
+```{r}
+By using paste, I gave R a command to display characters in a message box. Then I added my message in the quotation marks which is what will be displayed and the comma with a new quotation will display another message in the same coding chunk. Therefore, this is  two strings with one  message. For R, this also appears to be the equivalent of using x=MsgBox (0+64) when creating an error box in Windows Notepad. However, R is most likely different by which it does not display an error message on your screen but rather assign a value to a message you create. 
+```
+
 
 The last type are **logical** values like `TRUE` and `FALSE`. (Note that these are all caps.)
 
@@ -95,10 +105,33 @@ Logical Operators allow you to combine or change the results of comparisons.
 (@) Explain, what does the code on each line above do? 
 
 >
+```{r}
+[1] TRUE
+> 5 == 10
+[1] FALSE
+> 5 != 5
+[1] FALSE
+> 3 == 4 | 3
+[1] TRUE
+> 3 != 4 & 3 != 5
+[1] TRUE
+
+These lines perform actions that help us explain differences and similarities in how various operators function and how they can be interpreted.
+```
 
 (@) Create your own comparison. 
 ```{r}
-
+[1] TRUE
+> 7==7
+[1] TRUE
+> 6!=6
+[1] FALSE
+> 2*4==8
+[1] TRUE
+> 4*10!=40
+[1] FALSE
+> 6*5/2==14
+[1] FALSE
 ```
 
 ---
@@ -134,13 +167,13 @@ Whatever you prefer, be consistent and your future self will thank you when your
 (@) You try, create a variable and assign it a number: 
 
 ```{r}
-
+variable <- 56
 ```
 
 (@) Can you assign a string to a variable?
 
 ```{r}
-
+createstring <- "I like coffee"
 ```
 
 Once we've assigned a variable we can use that variable to run calculations just like we did with raw numbers.
@@ -162,22 +195,32 @@ My.Calculation <- (x + x)*10
 
 (@) You try. Assign a number to x and a number to y. Add those two numbers together.
 ```{r}
-
+> x <- 12
+> y <- 64
+> x + y
+[1] 76
 ```
 
 (@) Can you take `x` and `y` and multiply the result by 5? 
 ```{r}
-
+> x + y * 5
+[1] 332
 ```
 
 (@) Try creating two variables with names other than `x ` and `y`. Descriptive names tend to be more useful. Can you multiply the contents of your variables? 
 ```{r}
-
+> empanadas * jamon
+[1] 63
 ```
 
 (@) Try creating two variables that store strings. Can you concatenate those two variables together? 
 ```{r}
-
+> a <- "Mater's"
+> b <- "student"
+> paste(a, b, sep="")
+[1] "Mater'sstudent"
+> paste(a, b, sep=" ")
+[1] "Mater's student"
 ```
 
 ### Vectors
@@ -211,6 +254,14 @@ And we could then do calculations based on these values:
 my.numbers * 2
 ```
 (@) Explain in a few sentences, what happened in the code above?
+```{r}
+> numericvalues <- c(1, 3, 5, 7, 9)
+> my.numbers <- c(2, 4, 6, 8)
+> my.numbers * 2
+[1]  4  8 12 16
+
+What happened was that I assigned numbers to represent the value numericvalues and did the same for my.numbers. After doing this for both values, I multiplied by 2 to find the existing code demonstrated in the values of 4, 8, 12, and 16. 
+```
 
 >
 
@@ -221,10 +272,16 @@ my.numbers[3] * 2
 (@) Explain in a few sentences, what happened in the code above? 
 
 >
+```{r}
+> my.numbers [3]*2
+[1] 12
+
+My numbers were 2, 4, 6, 8 and the third number was 6. So when I multiplied 6 * 2, the value came to equal 12. This is because the bracket indicates a third symbol of the code. 
+```
 
 (@) You try, create a list of five items and store it in a descriptive variable. 
 ```{r}
-
+FavoriteShows <- list("Lost", "Game of Thrones", "Heroes", "Adventure Time", "Rick and Morty")
 ```
 
 
@@ -256,7 +313,10 @@ We can ask R to pull up the documentation like this:
 
 (@) Now you try, find the documentation for the function  `signif()`.
 ```{r}
-
+> signif(3.141593, digits=7)
+[1] 3.141593
+> signif(3.141593, digits=2)
+[1] 3.1
 ```
 
 In real life, you typically you wouldn't want to store this code in your script file. You probably don't need to pull up the documentation for the function every time you run that piece of code. But for the purposes of this worksheet we're adding it to our `.Rmd` document. 
@@ -264,6 +324,14 @@ In real life, you typically you wouldn't want to store this code in your script 
 (@) Use the console to find the documentation for `floor()`? Try it and then tell me, what does that function do? 
 
 >
+```{r}
+> floor (3.1)
+[1] 3
+> floor (8.9999)
+[1] 8
+
+What this function does is round the number to the closest value, but for some numbers it does not perform this task like with 8.9999. I am not sure why it did this, but it might be because it  goes to the smallest value instead of the next number. 
+```
 
 ### Data Frames & Packages
 
@@ -302,6 +370,26 @@ What is going on here? Each line within this function (x,y,z) creates a new colu
 (@) What is going on in row z? Can you explain the logic here?
 
 >
+```{r}
+library(tibble)
+> tibble(
++     x = 1:5, 
++     y = 1, 
++     z = x * 2 + y
++ )
+# A tibble: 5 × 3
+      x     y     z
+  <int> <dbl> <dbl>
+1     1     1     3
+2     2     1     5
+3     3     1     7
+4     4     1     9
+5     5     1    11
+
+What is happening in row z is that since y remains the same that equals 1, and x can be anywhere from 1 to 5, the value for z could range into the following - 3, 5, 7, 9, 11 which I could find with the help of the above code.
+
+
+```
 
 
 ## Loading Dataframes from Packages
@@ -315,6 +403,7 @@ Our class's package is called `DigitalMethodsData` and its hosted on [GitHub](ht
 After installing the package, we should load it: 
 ```{r}
 library(DigitalMethodsData)
+
 ```
 
 What kind of datasets are available in this package? We can use the help documentation to find out. 
@@ -324,6 +413,9 @@ Run `help(package="DigitalMethodsData")` in your console to pull up a list of da
 For demonstration purposes we'll use the `gayguides` data here. Pull up the help documentation for this dataset. What does the documentation tell you abou the scope of this dataset? 
 
 >
+```{r}
+The documentation discusses Bob Damron's Address Books and includes information transcribed from 1965 to 1985. However, it was last updated on December 2022 and the documentation demonstrates the scope of the dataset to be something which includes data of over the past 20 years between 1965 and 1985. This is handy because it allows the user to access certain observations of data efficiently in an entire set which contains 60,000. Furthermore, it lists the different addresses, type of amenity, city, state, and year these LGBTQ individuals visited and even provides the coordinates. 
+```
 
 To use a dataset included in this package we first need to load it. We can do so like this:
 
@@ -341,17 +433,63 @@ That gives us the first 6 rows of data. Its really useful if you just want to pe
 
 (@) The default is to print six rows of data. Can you modify the above code to print out the first 10 rows? 
 ```{r}
-
+> head(gayguides, n=10L)
+    X   ID        title                        description streetaddress           type amenityfeatures           city
+1   1 3213       'B.A.'                    (woods & ponds)               Cruising Areas     Cruisy Area    Lake Placid
+2   2 2265 'B.A.' Beach                           2 mi. E.        Rte. 2 Cruising Areas     Cruisy Area           Troy
+3   3 3269 'B.A.' Beach                 nr. Salt Air Beach               Cruising Areas     Cruisy Area Salt Lake City
+4   4 3388 'B.A.' Beach      nr. Evergreen Floating Bridge               Cruising Areas     Cruisy Area        Seattle
+5   5 3508 'B.A.' Beach               (2 mi. E. on Rte. 2)               Cruising Areas     Cruisy Area           Troy
+6   6 5116 'B.A.' Beach      nr. Evergreen Floating Bridge               Cruising Areas     Cruisy Area        Seattle
+7   7  780 'B.A.' Beach on Russian River, at Wohler Bridge               Cruising Areas     Cruisy Area  Russian River
+8   8 3810 'B.A.' Beach                           2 mi. E.        Rte. 2 Cruising Areas     Cruisy Area           Troy
+9   9 4979 'B.A.' Beach                 nr. Salt Air Beach               Cruising Areas     Cruisy Area Salt Lake City
+10 10 5191 'B.A.' Beach      nr. Evergreen Floating Bridge               Cruising Areas     Cruisy Area        Seattle
+   state Year notes      lat        lon                                                                     status
+1     NY 1982       44.27949  -73.97987 Location could not be verified. General city or location coordinates used.
+2     NY 1981       42.72841  -73.69178 Location could not be verified. General city or location coordinates used.
+3     UT 1981       40.74781 -112.18727 Location could not be verified. General city or location coordinates used.
+4     WA 1981       47.60621 -122.33207 Location could not be verified. General city or location coordinates used.
+5     NY 1982       42.72841  -73.69178 Location could not be verified. General city or location coordinates used.
+6     WA 1983       47.60621 -122.33207 Location could not be verified. General city or location coordinates used.
+7     CA 1983       38.91163 -123.01105 Location could not be verified. General city or location coordinates used.
+8     NY 1983       42.72841  -73.69178 Location could not be verified. General city or location coordinates used.
+9     UT 1983       40.74781 -112.18727 Location could not be verified. General city or location coordinates used.
+10    WA 1984       47.60621 -122.33207 Location could not be verified. General city or location coordinates used.
 ```
 
 (@) Can you find the last 6 rows of data? 
 ```{r}
-
+> tail(gayguides)
+          X    ID           title               description streetaddress       type
+60693 60693 PR351       Boccachio            (Natives only)               Bars/Clubs
+60694 60694 PR366       Boccachio            (Natives only)               Bars/Clubs
+60695 60695 PR377       Boccachio            (Natives only)               Bars/Clubs
+60696 60696 GU002   Mi Elena Club (Inquire locally) (Agana)          <NA> Bars/Clubs
+60697 60697 GU015 Star Cafe & Bar Downtown, opp. Agana Loop          <NA> Bars/Clubs
+60698 60698 GU019 Star Cafe & Bar Downtown, opp. Agana Loop          <NA> Bars/Clubs
+                                                                                  amenityfeatures     city state Year notes
+60693                                                                                     (G),(*) Hato Ray    PR 1977      
+60694                                                                                         (G) Hato Ray    PR 1979      
+60695                                                                                         (L) Hato Ray    PR 1980      
+60696                                                         (M) - Mixed Crowds - Some Straights    Agana    GU 1980  <NA>
+60697 (M) - Mixed Crowds - Some Straights,(YC) - Young and/or collegiate types,(*) - Very popular    Agana    GU 1975  <NA>
+60698 (M) - Mixed Crowds - Some Straights,(YC) - Young and/or collegiate types,(*) - Very popular    Agana    GU 1974  <NA>
+           lat       lon                                                                     status
+60693 18.42258 -66.05096 Location could not be verified. General city or location coordinates used.
+60694 18.42258 -66.05096 Location could not be verified. General city or location coordinates used.
+60695 18.42258 -66.05096 Location could not be verified. General city or location coordinates used.
+60696 13.47628 144.75022 Location could not be verified. General city or location coordinates used.
+60697 13.47628 144.75022 Location could not be verified. General city or location coordinates used.
+60698 13.47628 144.75022 Location could not be verified. General city or location coordinates used.
 ```
 
 (@) Reflect on the previous two prompts. How did you figure these out? 
 
 >
+```{r}
+I figured it out by using ? for help which brought me to the instructions on how to return the first and last parts of an object. Since head(gayguides) represents the first ten lines, an individual can use head(gayguides), then insert the number of observations they would like to access with n= _L. N represents the number of lines the user wants displayed. For displaying the last the last six lines, tail represents the final observations in the entire data set. Therefore, the user must type tail(gayguides) into the console to see those final observations. 
+```
 
 The `str()` function is another very useful function for understanding a dataset. It compactly displays the internal structure of an R object. 
 ```{r}
@@ -371,27 +509,330 @@ gayguides$title[500]
 (@) Break this down. Whats going on here? What do each of the elements of this code mean? (gayguides, $, title, and [500]) 
 
 >
+```{r}
+(Gayguides) represents the data set of all LGBTQ individuals, $ is a subset for representing the occupational status of each individual regarding employment, title is a function that can be used to add labels to a plot which would include names, calls, or expressions, and [500] is a number which symbolizes the 500th individual on the gay guides data set. Essentially, gayguides$title[500] is a command telling R to search the gayguides data set for the occupation, name, and employer of the 500th person in the entire data set of 60,000 LGBTQ people.  
+```
 
 (@) The Year variable contains the year (numeric) of each entry. Can you find the earliest year in this dataset? (Using code, don't cheat and use the documentation!)
 ```{r}
-
+ min(gayguides$Year)
+[1] 1965
 ```
 
 
 (@) How about the latest year? 
 ```{r}
-
+ max(gayguides$Year)
+[1] 1985
 ```
 
 
 (@) Add another dataset from `DigitalMethodsData`. How many observations are included in this dataset? Run through some of the examples from above to learn about the dataset.
 ```{r}
-
+> help(package="DigitalMethodsData")
+> data(BostonWomenVoters)
+> str(BostonWomenVoters)
+'data.frame':	10702 obs. of  34 variables:
+ $ Ward.Book                         : int  6 6 8 1 6 6 6 6 6 6 ...
+ $ Volume                            : chr  "3" "102" "3" "3" ...
+ $ Page.Number                       : chr  "3" "19" "17" "1" ...
+ $ Date                              : chr  "8/20/20" "" "10/7/20" "8/19/20" ...
+ $ Ward                              : int  6 NA 8 1 6 6 6 6 6 6 ...
+ $ Precinct                          : chr  "5" "" "4" "7" ...
+ $ Name                              : chr  "Josephine P. Helmer" "Theodosia E. Grice" "Anne M.T. Laurie" "Marion D. Todd" ...
+ $ Street.of.Residence.on.April.1    : chr  "Tremont Street" "Shawmut Avenue" "Pinckney Street" "Monmouth Street" ...
+ $ Street.Number.on.April.1          : chr  "626" "499" "52" "49" ...
+ $ Unit                              : chr  "2" "2" "" "whole" ...
+ $ Age                               : int  20 20 20 20 21 21 21 21 21 21 ...
+ $ Country.of.Birth                  : chr  "France" "United States" "United States" "United States" ...
+ $ State.or.Province.of.Birth        : chr  "" "Georgia" "New Hampshire" "Massachusetts" ...
+ $ County.of.Birth                   : chr  "" "" "" "" ...
+ $ Town.of.Birth                     : chr  "Cholet" "Darien" "Franklin" "Boston" ...
+ $ Occupation                        : chr  "Housewife" "" "Clerk" "Stenographer" ...
+ $ Place.of.Business                 : chr  "" "" "Federal Reserve Bank" "16 New Street" ...
+ $ Court.of.Naturalization           : chr  "" "" "Single" "Single" ...
+ $ Date.of.Naturalization            : chr  "" "" "" "" ...
+ $ Husband.Name                      : chr  "William J. Helmer" "" "" "" ...
+ $ Husband.Country.of.Birth          : chr  "United States" "" "" "" ...
+ $ Husband.State.or.Province.of.Birth: chr  "Michigan" "" "" "" ...
+ $ Husband.County.of.Birth           : chr  "" "" "" "" ...
+ $ Husband.Town.of.Birth             : chr  "Pinconning" "" "" "" ...
+ $ Husband.Date.of.Naturalization    : chr  "" "" "" "" ...
+ $ Husband.Court.of.Naturalization   : chr  "" "" "" "" ...
+ $ Father.Name                       : chr  "" "" "" "" ...
+ $ Father.Country.of.Birth           : chr  "" "" "" "" ...
+ $ Father.State.or.Province.of.Birth : chr  "" "" "" "" ...
+ $ Father.County.of.Birth            : chr  "" "" "" "" ...
+ $ Father.Town.of.Birth              : chr  "" "" "" "" ...
+ $ Present.Residence                 : chr  "Same" "" "Same" "Same" ...
+ $ Notes                             : chr  "" "Entry is partial and crossed out with note \"not of age until Jan 1921\"" "Note in Age field: \"Becomes 21 Oct. 28, 20\"" "Born: East Boston; Birthday: 1920-10-25; Note: \"Hold for Primary\"" ...
+ $ X                                 : chr  "" "" "" "" ...
+> head(BostonWomenVoters$title)
+NULL
+> head(BostonWomenVoters)
+  Ward.Book Volume Page.Number     Date Ward Precinct                Name Street.of.Residence.on.April.1
+1         6      3           3  8/20/20    6        5 Josephine P. Helmer                 Tremont Street
+2         6    102          19            NA           Theodosia E. Grice                 Shawmut Avenue
+3         8      3          17  10/7/20    8        4    Anne M.T. Laurie                Pinckney Street
+4         1      3           1  8/19/20    1        7      Marion D. Todd                Monmouth Street
+5         6     1A          10 10/13/20    6        1     Agnes P. Laffan                 Shawmut Avenue
+6         6     1A          10 10/13/20    6        3    Augusta P. Davis                 Laconia Street
+  Street.Number.on.April.1  Unit Age Country.of.Birth State.or.Province.of.Birth County.of.Birth Town.of.Birth
+1                      626     2  20           France                                                   Cholet
+2                      499     2  20    United States                    Georgia                        Darien
+3                       52        20    United States              New Hampshire                      Franklin
+4                       49 whole  20    United States              Massachusetts                        Boston
+5                      177        21    United States              Massachusetts                        Boston
+6                       19        21    United States              Massachusetts                        Boston
+     Occupation    Place.of.Business Court.of.Naturalization Date.of.Naturalization      Husband.Name
+1     Housewife                                                                     William J. Helmer
+2                                                                                                    
+3         Clerk Federal Reserve Bank                  Single                                         
+4  Stenographer        16 New Street                  Single                                         
+5 Drapery sewer                                                                                      
+6   Book keeper                                                                                      
+  Husband.Country.of.Birth Husband.State.or.Province.of.Birth Husband.County.of.Birth Husband.Town.of.Birth
+1            United States                           Michigan                                    Pinconning
+2                                                                                                          
+3                                                                                                          
+4                                                                                                          
+5                                                                                                          
+6                                                                                                          
+  Husband.Date.of.Naturalization Husband.Court.of.Naturalization Father.Name Father.Country.of.Birth
+1                                                                                                   
+2                                                                                                   
+3                                                                                                   
+4                                                                                                   
+5                                                                                                   
+6                                                                                                   
+  Father.State.or.Province.of.Birth Father.County.of.Birth Father.Town.of.Birth Present.Residence
+1                                                                                            Same
+2                                                                                                
+3                                                                                            Same
+4                                                                                            Same
+5                                                                                            Same
+6                                                                                            Same
+                                                                   Notes X
+1                                                                         
+2 Entry is partial and crossed out with note "not of age until Jan 1921"  
+3                            Note in Age field: "Becomes 21 Oct. 28, 20"  
+4      Born: East Boston; Birthday: 1920-10-25; Note: "Hold for Primary"  
+5                                                 Birthday on 1920-02-05  
+6                                                                         
+> BostonWomenVoters$title[500]
+NULL
+> BostonWomenVoters$title
+NULL
+> tail(BostonWomenVoters)
+      Ward.Book Volume Page.Number     Date Ward Precinct                Name Street.of.Residence.on.April.1
+10697        10    106          46  10/9/20   10        6 Sarah Clara Laforne                       K Street
+10698        10    106          46 10/11/20   NA                A. Edna Emery              East Fifth Street
+10699        10    106          47 10/11/20   NA                                          East Fourth Street
+10700        10    106          48 10/11/20   10            Barbara M. Clancy                       L Street
+10701        10    106          49 10/13/20   NA             E.D. DeVoy Ellen              East Sixth Street
+10702        10     1A          14 11/24/20   10        9    Ellen T. Kennedy             East Fourth Street
+      Street.Number.on.April.1 Unit Age Country.of.Birth State.or.Province.of.Birth County.of.Birth Town.of.Birth
+10697                      340       NA                                                                          
+10698                      533       NA                                                                          
+10699                      707       NA                                                                          
+10700                       53       NA                                                                          
+10701                      668       NA                                                                          
+10702                      835       NA                                                                          
+      Occupation Place.of.Business Court.of.Naturalization Date.of.Naturalization Husband.Name Husband.Country.of.Birth
+10697                                                                                                                  
+10698                                                                                                                  
+10699                                                                                                                  
+10700                                                                                                                  
+10701                                                                                                                  
+10702                                                                                                                  
+      Husband.State.or.Province.of.Birth Husband.County.of.Birth Husband.Town.of.Birth Husband.Date.of.Naturalization
+10697                                                                                                                
+10698                                                                                                                
+10699                                                                                                                
+10700                                                                                                                
+10701                                                                                                                
+10702                                                                                                                
+      Husband.Court.of.Naturalization Father.Name Father.Country.of.Birth Father.State.or.Province.of.Birth
+10697                                                                                                      
+10698                                                                                                      
+10699                                                                                                      
+10700                                                                                                      
+10701                                                                                                      
+10702                                                                                                      
+      Father.County.of.Birth Father.Town.of.Birth                       Present.Residence
+10697                                                                                    
+10698                                                                                    
+10699                                                                                    
+10700                                                                                    
+10701                                                                                    
+10702                                             Entry crossed out and "void" written in
+                                            Notes X
+10697 Entry crossed out, handwritten note: "void"  
+10698 Entry crossed out; handwritten note: "void"  
+10699                    Handwritten note: "void"  
+10700                           Entry crossed out  
+10701 Entry crossed out, handwritten note: "void"  
+10702                                              
+> head(BostonWomenVoters), n=16L
+Error: unexpected ',' in "head(BostonWomenVoters),"
+> head(BostonWomenVoters),n=16L
+Error: unexpected ',' in "head(BostonWomenVoters),"
+> head(BostonWomenVoters, n=16L)
+   Ward.Book Volume Page.Number     Date Ward Precinct                Name Street.of.Residence.on.April.1
+1          6      3           3  8/20/20    6        5 Josephine P. Helmer                 Tremont Street
+2          6    102          19            NA           Theodosia E. Grice                 Shawmut Avenue
+3          8      3          17  10/7/20    8        4    Anne M.T. Laurie                Pinckney Street
+4          1      3           1  8/19/20    1        7      Marion D. Todd                Monmouth Street
+5          6     1A          10 10/13/20    6        1     Agnes P. Laffan                 Shawmut Avenue
+6          6     1A          10 10/13/20    6        3    Augusta P. Davis                 Laconia Street
+7          6     1A          12 10/13/20    6        7      Alice E. Allen             East Newton Street
+8          6     1A          12 10/13/20    6        1      Ella Silverman                 Emerald Street
+9          6     1A          12 10/13/20    6        2    Sara A. Saccoach              Washington Street
+10         6     1A          12 10/13/20    6        7       Edith W. Shaw             East Newton Street
+11         6     1A          12 10/13/20    6        7       Helen D. Hart          East Brookline Street
+12         6     1A          12 10/13/20    6        5   Gertrude R. Gorey                     Union Park
+13         6     1A          14 10/13/20    6        7      Marion J. Port             East Newton Street
+14         6     1A          14 10/13/20    6        6  Mildred Wedgeworth                  Malden Street
+15         6      3           2  8/19/20    6        2   Matilda S. Cantor                    Rose Street
+16         6      3           2  8/19/20    6        2         Mazie Welch                  Oswego Street
+   Street.Number.on.April.1  Unit Age Country.of.Birth State.or.Province.of.Birth County.of.Birth Town.of.Birth
+1                       626     2  20           France                                                   Cholet
+2                       499     2  20    United States                    Georgia                        Darien
+3                        52        20    United States              New Hampshire                      Franklin
+4                        49 whole  20    United States              Massachusetts                        Boston
+5                       177        21    United States              Massachusetts                        Boston
+6                        19        21    United States              Massachusetts                        Boston
+7                                  21    United States              Massachusetts                       Melrose
+8                        65        21    United States              Massachusetts                        Boston
+9                      1100        21    United States              Massachusetts                        Boston
+10                                 21    United States                   New York                    Whitestone
+11                       78        21    United States                 New Jersey                    Belleville
+12                       46        21    United States              Massachusetts                      Brockton
+13                       94        21    United States                      Maine                      Portland
+14                      124        21    United States              Massachusetts                        Boston
+15                       12     1  21    United States                Connecticut                   New Britain
+16                       12     1  21    United States              Massachusetts                        Boston
+       Occupation                 Place.of.Business Court.of.Naturalization Date.of.Naturalization      Husband.Name
+1       Housewife                                                                                  William J. Helmer
+2                                                                                                                   
+3           Clerk              Federal Reserve Bank                  Single                                         
+4    Stenographer                     16 New Street                  Single                                         
+5   Drapery sewer                                                                                                   
+6     Book keeper                                                                                                   
+7      Bank clerk                                                                                                   
+8       Saleslady            Superior Millinery Co.                                                                 
+9         At home                                                                                                   
+10          Clerk                                                                                                   
+11 School teacher                                                                                                   
+12 School teacher                                                                                                   
+13        At home                                                                                     George F. Port
+14   Stenographer                                                                                                   
+15    Book keeper Auto car sales and [service?] Co.                  Single                                         
+16      Housewife                                                                                      Patrick Welch
+   Husband.Country.of.Birth Husband.State.or.Province.of.Birth Husband.County.of.Birth Husband.Town.of.Birth
+1             United States                           Michigan                                    Pinconning
+2                                                                                                           
+3                                                                                                           
+4                                                                                                           
+5                                                                                                           
+6                                                                                                           
+7                                                                                                           
+8                                                                                                           
+9                                                                                                           
+10                                                                                                          
+11                                                                                                          
+12                                                                                                          
+13            United States                      Massachusetts                                        Boston
+14                                                                                                          
+15                                                                                                          
+16            United States                      Massachusetts                                        Boston
+   Husband.Date.of.Naturalization Husband.Court.of.Naturalization Father.Name Father.Country.of.Birth
+1                                                                                                    
+2                                                                                                    
+3                                                                                                    
+4                                                                                                    
+5                                                                                                    
+6                                                                                                    
+7                                                                                                    
+8                                                                                                    
+9                                                                                                    
+10                                                                                                   
+11                                                                                                   
+12                                                                                                   
+13                                                                                                   
+14                                                                                                   
+15                                                                                                   
+16                                                                                                   
+   Father.State.or.Province.of.Birth Father.County.of.Birth Father.Town.of.Birth Present.Residence
+1                                                                                             Same
+2                                                                                                 
+3                                                                                             Same
+4                                                                                             Same
+5                                                                                             Same
+6                                                                                             Same
+7                                                                                             Same
+8                                                                                             Same
+9                                                                                             Same
+10                                                                                            Same
+11                                                                                            Same
+12                                                                                            Same
+13                                                                                            Same
+14                                                                                            Same
+15                                                                                            Same
+16                                                                               73 Compton Street
+                                                                    Notes X
+1                                                                          
+2  Entry is partial and crossed out with note "not of age until Jan 1921"  
+3                             Note in Age field: "Becomes 21 Oct. 28, 20"  
+4       Born: East Boston; Birthday: 1920-10-25; Note: "Hold for Primary"  
+5                                                  Birthday on 1920-02-05  
+6                                                                          
+7               Residence: Franklin Square House. Birthday on 1920-01-22.  
+8                                                                          
+9                                                  Birthday on 1920-01-27  
+10              Residence: Franklin Square House. Birthday on 1920-05-18.  
+11                                                Birthday on 1920-01-07   
+12                                                 Birthday on 1920-10-04  
+13                                                 Birthday on 1920-04-06  
+14                                                 Birthday on 1920-05-16  
+15                                                 Birthday on 1920-03-21  
+16                                                 Birthday on 1920-05-06  
+> min(BostonWomenVoters$Title)
+[1] Inf
+Warning message:
+In min(BostonWomenVoters$Title) :
+  no non-missing arguments to min; returning Inf
+> min(BostonWomenVoters$Year)
+[1] Inf
+Warning message:
+In min(BostonWomenVoters$Year) :
+  no non-missing arguments to min; returning Inf
+> min(BostonWomenVoters$Name)
+[1] ""
+> min(BostonWomenVoters$Place.of.Business)
+[1] ""
+> min(BostonWomenVoters$Occupation)
+[1] ""
+> min(BostonWomenVoters$Date)
+[1] ""
+> max(BostonWomenVoters$Volume)
+[1] "V107"
+> max(BostonWomenVoters$Street.of.Residence.on.April.1)
+[1] "Yarmouth Street"
+> min(BostonWomenVoters$Street.of.Residence.on.April.1)
+[1] ""
+> min(BostonWomenVoters$Precinct)
+[1] ""
+> max(BostonWomenVoters$Precinct)
+[1] "9"
 ```
 
 (@) What did you learn about the dataset? What can you tell me about it? 
 
 >
+```{r}
+I learned that there are 10,702 observaions in BostonWomenVoters which is less than the gayguides data set. However, when I tried to find the minimum number of dates, occupations, volumes, places of businesses, and streets of residences, R came up with no return but when I attempted with max, it returned a value set. This was confusing because I was able the minimum for the gayguides but not BostonWomenVoters. However, the most fascinating part was when I observed the BostonWomenVoters was that despite most of the women living in Massachuesetts, there were some who were out of state as well.
+```
 
 
 
