@@ -1,0 +1,77 @@
+#Formulate your question
+
+How can this data explain trends of the different occupations that each woman has and their  connection to differences in courtship, gender roles, and ethnciity as they shift  over time from 1920?
+
+#Read in your data
+
+library(dplyr)
+library(DigitalMethodsData)
+data("BostonWomenVoters")
+
+#Check the packaging
+
+nrow("BostonWomenVoters")
+ncol("BostonWomenVoters")
+
+#Look at top and bottom of your data
+
+head(BostonWomenVoters[, c(1:16, 16)])
+head(BostonWomenVoters[, c(1:16, 16)])
+
+#Check your n's'
+
+table(BostonWomenVoters$Occupation)
+library(dplyr)
+filter(BostonWomenVoters, Occupation == "House-wife") %>% + 
+  select(Court.of.Naturalization, Age, Date, + Occupation, Name)
+
+filter(Occupation, Place.of.Business == "General Electric Company, East Boston"
+       + Date == "10/13/20" + State.or.Province.of.Birth == "Massachuesetts" %>% +
+         as.data.frame
+       
+select(Occupation, Place.of.Business) %>% unique %>% nrow()
+
+#Run (str)
+
+str(BostonWomenVoters)
+
+#Validate with at least one external data source
+
+MyDataset <- read.csv("/home/daskew/LaborForcebySexRaceEthnicity.csv")
+summary(MyDataset$X.1)
+quantile(MyDataset$X.1)
+
+#Try the Easy Solution First
+
+ranking <- group_by(BostonWomenVoters, Date, State.or.Province.of.Birth, Occupation) %>% + summarize(BostonWomenVoters = names(Massachuesetts)) %>% + as.data.frame() + arrange(desc(BostonWomenVoters))
+head(BostonWomenVoters, 10)
+tail(BostonWomenVoters, 10)
+
+filter(BostonWomenVoters, Occupation == "House-wife", Country.of.Birth == "United States") %>% nrow
+> filter(BostonWomenVoters == "" & All other groups == "") %>%
+  +         mutate(Place.of.Business = factor(Date(Age), Precinct = Husband.Country.of.Birth)) %>%
+  +         group_by(Town.of.Birth) %>%
+  +         summarize(MyDataset = mean(Occupation))
+
+#Challenge your solution
+
+set.seed(1)
+> N <- nrow(BostonWomenVoters)
+> idx <- sample(N, N, replace = TRUE)
+> BostonWomenVoters2 <- BostonWomenVoters [idx, ]
+ranking2 <- group_by(BostonWomenVoters2, state.region, Date) %>% summarize(BostonWomenVoters = mean(Occupation)) %>%
+  +         as.data.frame %>%
+  +         arrange(desc(BostonWomenVoters))
+
+cbind(head(BostonWomenVoters, 16) + tail(BostonWomenVoters2, 16))
+
+#Do I have the right questions?
+
+Do I have the right data, need other data, and ask the right question? 
+
+While it was challenging to try to explain the evolution of how women's roles have changed based on the external data source, I think I had the best intentions but for some reason the external source I used was not as cooperative or simple to compare with BostonWomenVoters.
+I think I do need more data to be able to come up with a better conclusion or explanation as to how this occurred and the overall outcome. Based on the data from what I do know is that a lot of women's roles have changed by which more of them are in the work force and that number is steadily increasing as projections for 2029
+demonstrate that approximately 47.6 percent of all women will make up the labor force and a major percentage are White women. Hispanic and Black women have the lowest numbers of 9.3 and 6.9. Therefore, while certain roles have changed, a majority of  minority women are very much still unemployed and stay-at-home mothers. 
+Furthermore, the women that are single in the BostonWomenVoters are those that are employed while those that have jobs which include manual labor and stay-at-home are married.
+
+
