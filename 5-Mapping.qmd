@@ -1,5 +1,7 @@
 ---
 title: "Worksheet 5: Mapping"
+name: David Askew
+date: 3/27/2024
 format: html
 ---
 
@@ -36,18 +38,31 @@ Now we have latitude and longitude coordinates for our data.
 
 (@) Use this approach to geocode the `UndergroundRR` data. 
 ```{r}
-
+library(dplyr)
+UndergroundRR.coordinates <- UndergroundRR %>% 
+geocode(city = City, state = state.abb, method = 'osm')
 ```
 
 
 (@) Geocode the Boston Women Voters dataset. Note that the data does include street addresses but because they are broken into parts - street address number, street, etc - you'll need to combine them into a full address to pass to the geocoding function. 
 ```{r}
+library(DigitalMethodsData)
 data("BostonWomenVoters")
-```
+streetaddresses.BWV <-
+BostonWomenVoters %>%
+mutate(BostonWomenVoters)
+streetaddress = paste0(Street.Number.on.March.24, " "), Street.of.Residence.on.March.24, ",", " ", Town.of.Birth, ",", "", State.or.Province.of.Birth))
+BWV.geocoded <-
+streetaddresses.BWV %>% geocode(address = streetadress, method='osm', lat = latitude, long = longitude)
+head(BWV.geocoded)
+
+
+
 
 (@) As mentioned above - there are many ways to make a map in R. The `ggmap()` package has a function called `qmplot()` which allows for the quick plotting of maps with data. Look up the documentation for this package and use it to create a plot of the recreational data that we gecode above.
-```{r}
 
+```{r}
+qmplot(x, y, data = data_frame(), source = "stamen", maptype = "toner", color = ("blue"))
 ```
 
 ### Maps with `ggplot()`
@@ -57,29 +72,57 @@ Just like charts in ggplot, maps in ggplot are plotted using a variety of layers
 First we need to get a basemap. For this example we'll use the `map_data()` function which turns data from the `maps` package into a data frame that is suitable for plotting with ggplot. 
 
 (@) Look at the documentation for `map_data()`. Which geographies does this package provide access to?
+```{r}
+
+The geographies which the package provides access to includes a world map, a map of the United States or country of choice (France, Italy, New Zealand, etc.), map of the U.S. with states included, a second world map, and a map of different counties of the U.S. The documentation additionally uses a map which charts differences between high or low levels of arrests in different states of the United States. 
+
+```
 
 >
 
 Lets load the base map data for the US. 
 ```{r}
-usa <- map_data("state")
+library(ggplot2)
+usa_map <- map_data("usa")
+head(usa_map)
 ```
 
 (@) `map_data()` generates a data frame. Take a look at this data frame, what types of data are included? 
+```{r}
+mapdata <- map_data("world")
+View(mapdata)
+```
 
 > 
+```{r}
+The data included primarily involves latitude and longitude, group, order, region, and subregion.  
+```
 
 
 We can now pass this data to ggplot to create a simple basemap. When we wanted to create a bar plot using `ggplot()` we called `geom_bar`. When we wanted to create a line chart we used `geom_point()` and `geom_line()`. The sample principle applies here and `ggplot()` provides a geom for maps.
 ```{r}
-ggplot() + 
-  geom_map( data = usa, map = usa, aes(long, lat, map_id=region))
+mapdata <- map_data("usa")
+View(mapdata)
+mapdata <- left_join(mapdata, gayguides, by="region")
+View(mapdata)
+mapdata1<-mapdata %>% filter(!is.na(mapdata$region))
+View mapdata1
+map1<-ggplot1(mapdata1, aes( x = long, y = lat, group=group)) + geom_polygon(aes(fill = down), color = "black")
+map1
 ```
 
 Now we have a basemap! But what if we want to layer data onto it. Lets add all of the locations in `gayguides` from 1965. First we need to set up our data: 
 ```{r}
-data(gayguides)
-gayguides <- gayguides %>% filter(Year == 1965)
+mapdata <- map_data("usa")
+View(mapdata)
+mapdata <- left_join(mapdata, gayguides, by="year")
+View(mapdata)
+mapdata1<-mapdata %>% filter(year == 1965(mapdata$year))
+View mapdata1
+map1<-ggplot1(mapdata1, aes( x = long, y = lat, group=group)) + geom_polygon(aes(fill = down), color = "black")
+map1
+
+
 ```
 
 And then we can use the same mapping code from above but this time we're going to add an additional geom -- `geom_point()` which will point to each of our locations from 1965. 
@@ -91,16 +134,31 @@ ggplot() +
 
 (@) This map looks slightly funny, but that is because the data includes entries outside of the contiguous United States. Try filtering out those entries and mapping this again. Can you change the color or size of the points? Can you add a title?
 ```{r}
-
+ggplot() + 
+  geom_map( data = usa, map = usa, aes(long, lat, map_id=region)) +
+  geom_point(data = gayguides, mapping = aes(x=lon, y=lat))
 ```
 
 (@) Can you map just locations in South Carolina (on a basemap of SC)? 
 ```{r}
+locations_df <- data.frame(longitude = c(-80.894, -81.032, -79.938),
+  latitude = c(33.904, 34.000, 32.776))
+leaflet() %>%
+  addTiles(urlTemplate = "https://data-scdnr.opendata.arcgis.com/maps/scdnr::basemap-sc-imagery-2020/explore?location=33.599434%2C-80.131350%2C7.58") %>%
+  setView(lng = -80.894, lat = 33.904, zoom = 7) %>%
+  addMarkers(data = locations_df, popup = paste("Location", seq_along(longitude)))
 
 ```
 
 (@) Create a map that uses your geocoded data from the Boston Women Voters dataset. 
 ```{r}
+library(sf)
+locations <- read.csv("BostonWomenVoters.csv")
+locations_sf <- st_as_sf(locations, coords = c("longitude, latitude"), crs = 4326
+                         basemap_url <- "https://services.arcgis.com/560e21f26bd14fdf98f54fe548f9ab60/arcgis/rest/services/Basemap_SC_Imagery_2020/MapServer"
+                         basemap <- st_read(basemapurl)
+                         plot(basemap)
+                         plot(locations_sf, add = TRUE, col = "blue", pch = 16)
 
 ```
 
@@ -166,12 +224,16 @@ This is a great start. But using AZF001 (Native born males) as the fill does not
 
 (@) First, create a variable called total_male_pop, with the total foreign and native born male population by summing the variables AZF001 and AZF003. 
 ```{r}
-
+library(dplyr)
+my_data_frame <- data_frame %>%
+  mutate(total_male_pop = AZF001 + AZF003)
 ```
 
 (@) Now, use the total_male_pop variable and create a variable for the the percentage of foreign born males.
 ```{r}
-
+library(dplyr)
+my_data_frame <- data_frame %>%
+  mutate(foreign_born_male_percentage = (AZF001 / total_male_pop) * 100)
 ```
 
 (@) Now map your result. You'll want to replicate the code from the example above, but this time add another layer to the plot - a scale. Here we'll use this scale `scale_fill_continuous("", labels = scales::percent)`
@@ -179,6 +241,9 @@ This is a great start. But using AZF001 (Native born males) as the fill does not
 Before you write that code, look up the documentation for the above code (and look at the examples). What does it do? 
 
 >
+```{r}
+It is used to customize colors for data and allows the user to modify elements like bars, points, and areas. It is also used to format labels as percentages and customize those as well. 
+```
 
 Now create the map: 
 ```{r}
@@ -212,12 +277,19 @@ leaflet(data=rec.data.coordinates) %>% addTiles() %>% addMarkers(~longitude, ~la
 
 (@) Use leaflet to map a dataset of your choice: 
 ```{r}
+library(leaflet.providers)
+leaflet.providers %>%
+  addTiles() %>%
+  setView(lng = -3.7, lat = 40.4, zoom = 5)
 
 ```
 
 (@) Explain what choices you made in building this map? Why might you use leaflet over ggplot? When would ggplot be more desirable? 
 
 >
+```{r}
+You want to use leaflet over ggplot as a means of mapping with more detail because it allows for more customization and user interaction regarding data. ggplot is more basic when creating a simple basemap without too many layers. Therefore, leaflet would be more desirable when using things such as overlays and adding icons. ggplot would be more desirable when creating simple data that involves both maps and plots and is more useful when creating static maps.
+```
 
 
 ### Exercises
