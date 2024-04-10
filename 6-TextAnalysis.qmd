@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 6: Text Analysis'
-author: ''
-date: ''
+author: 'David Askew'
+date: '4-3-24'
 ---
 
 _This is the sixth in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document, and upload it to canvas. Don't forget to commit your changes as you go and push to github when you finish the worksheet._
@@ -13,7 +13,7 @@ Text analysis is an umbrella for a number of different methodologies. Generally 
   1. Acquiring a corpus
   2. Preparing the text or Pre-processing
   3. Choosing an analytical tool 
-    * (There are many different tools or methods for text analysis. Take a minute and Google        each of these methodologies: tf-idf, topic modeling, sentiment analysis, word vector            analysis, n-grams)
+    * (There are many different tools or methods for text analysis. Take a minute and Google each of these methodologies: tf-idf, topic modeling, sentiment analysis, word vector analysis, n-grams)
   4. Analyzing the results
   
 In this worksheet we are focusing on basic text analysis. We'll learn how to load textual data into R, how to prepare it, and then how to analyze it using tf-idf or term-frequency according to inverse document frequency. 
@@ -60,7 +60,7 @@ sotu_texts <- readtext(file_paths)
 
 Take a look at sotu_texts now. Notice that we have two columns, one filled with the text, and one with a document id. 
 ```{r}
-head(sotu_texts, n = 5)
+head(sotu_text, n = 5)
 ```
 
 Now our textual data is loaded into R but the textual data and the metadata are in two different data frames. Lets combine them. Note that this isn't the way I would typically recommend doing this but its a quirk of the SOTU data. Typically when I create a metadata spreadsheet for a textual dataset I have a column for the file name which makes joining the textual data and metadata together easier. Here, we'll need to sort the dataset so that is alphabetical and then join the two together.
@@ -68,9 +68,9 @@ Now our textual data is loaded into R but the textual data and the metadata are 
 ```{r}
 sotu_whole <- 
   sotu_meta %>%  
-  arrange(president) %>% # sort metadata
-  bind_cols(sotu_texts) %>% # combine with texts
-  as_tibble() # convert to tibble for better screen viewing
+  arrange(president) %>% 
+  bind_cols(sotu_text) %>% 
+  as_tibble() 
 
 glimpse(sotu_whole)
 ```
@@ -102,7 +102,10 @@ The function `unnest_tokens()` also has an option called token. Tokenizing by wo
 
 (@)Use the documentation to tokenize the dataset into sentences: 
 ```{r}
-
+library(sbo)
+text_data <- "This is a sentence."
+sentences <- tokenize_sentences(text_data)
+print(sentences)
 ```
 
 We've talked about n-grams loosely in class. But lets define it more formally. An n-gram is a contiguous sequence of n items from a given sample of text or speech. The n stands for the number of items. So for example, a bi-gram is sets of two words. 
@@ -116,14 +119,18 @@ A tri-gram would look like this:
 We can use unnest_tokens() to create n-grams for us. To do that we just have to add an extra option that defines n. 
 ```{r}
 sotu_bigrams <- sotu_whole %>%
-  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+  unnest_token(bigram, text, token = "ngrams", n = 2)
 
 head(sotu_bigrams$bigram)
 ```
 
 (@) Use `unest_tokens()` to create tri-grams. 
 ```{r}
+sotu_trigrams <- sotu_whole %>% 
+  unnest_tokens(trigram, text, token = "ngrams", n = 3)
 
+head(sotu_trigrams$trigram)
+  
 ```
 
 ### Stopwords
@@ -158,9 +165,12 @@ The third common kind of pre-process is called word stemming. This process reduc
 `tidytext` doesn't have its own word stemming function. Instead we have to rely on the functions provided by `hunspell` or `SnowballC`. I prefer `SnowballC`. You may need to install it before running the below code. 
 
 ```{r}
-library(SnowballC)
-tidy_sotu_words %>%
-        mutate(word_stem = wordStem(word))
+
+library(tidyverse)
+library(tidytext)
+tidy_sotu_words <- sotu %>%
+  unnest_tokens(word, text)
+
 ```
 
 Now if you compare the word and word_stem columns you can see the effect that wordStem had. Notice that it works well in cases like 
@@ -179,8 +189,8 @@ file_paths <- sotu_dir(dir = "sotu_files")
 sotu_texts <- readtext(file_paths)
 sotu_whole <- 
   sotu_meta %>%  
-  arrange(president) %>% # sort metadata
-  bind_cols(sotu_texts) %>% # combine with texts
+  arrange(president) %>%
+  bind_cols(sotu_texts) %>% 
   as_tibble() 
 
 tidy_sotu <- sotu_whole %>%
@@ -190,6 +200,16 @@ tidy_sotu <- sotu_whole %>%
 (@) Before we move forward, take a minute a describe the chunk of code you just ran. What does each section do and how does it reflect the workflow for a topic modeling project? What are the important steps that are unique to topic modeling? 
 
 >
+```{r}
+Step 1. meta <- as.data.frame(sotu_meta) converts sotu_meta into a dataframe. This dataframe has metadata related to SOTU or the State of the Union speeches.
+
+Step 2. file_paths <- sotu_dir(dir = "sotu_files") retrieves directory paths for the SOTU files.
+
+Step 3. sotu_texts <- readtext(file_paths) reads text from SOTU files into an object in R.
+
+Step 4. sotu_whole <- sotu_meta %>% arrange(president) %>% bind_cols(sotu_texts) %>% as_tibble() organizes and combines metadata with texts from the SOTU speeches. The metadata is arranged by whoever the president is, combines metadata with texts of speeches from that president, and converts the result into a tibble.
+
+Step 5. tidy_sotu <- sotu_whole %>% unnest_tokens(word, text) %>% anti_join(stop_words) tokenizes the text into words, removes stop words like "the" "and" and others from the text, and results in a clean data frame. Once this is done, it is ready for topic modeling to begin. 
 
 
 The most basic kind of analysis we might be interested in doing is counting words. We can do that easily using the `count()` function: 
@@ -224,15 +244,25 @@ tidy_sotu %>%
   group_by(president) %>% 
   summarize(avg_words = mean(n)) %>% 
   arrange(desc(avg_words))
+
 ```
 
 (@) Think back to the metadata that we loaded about these speeches. Why are more modern president's state of the union addresses shorter? 
 
->
+> More modern presidents' state of the union addresses are shorter because 
 
 (@) Filter the dataset to address this discrepancy and the recreate these statistics: 
 ```{r}
-
+filtered_sotu <- tidy_sotu %>% filter(n >= 100)
+speech_stats <- filtered_sotu %>%
+  group_by(president) %>% 
+  summarize(
+    avg_words = mean(),
+    max_words = max(),
+    min_words = min(n)
+  )
+longest_speech <- speech_stats %>% arrange(desc(max_words)) %>% topenv(1)
+shortest_speech <- speech_stats %>% arrange(desc(min_words)) %>% topenv(1)
 ```
 
 ### Term Frequency
@@ -339,20 +369,66 @@ sotu_word_pairs %>%
 
 ```
 
-## Analyzing Historical Journals
+## Analyzing Historical Newspapers About Buffalo Bill
 
-In the github repository below I have included the text and metadata for a journal called _Mind and Body_ which ran from the 1890s until the late 1930s and chronicled the development of the physical education profession. This dataset was OCR'd from copies stored in Google Books. Using the metadata provided and the raw text files can you use what you learned above to analyze these texts? What historical conclusions might you be able to draw?
+To practice text analysis this week you will be helping Dr. Seefeldt with his research. In the github repository below I have included a metadata file containing all of the associated info from each article and a txt folder with each text file. 
 
+The dataset is described by Dr. Seefeldt this way: 
+> The project staff identified 99 visits to Indiana communities, some of which included performances spanning two or more days.  We located and captured a total of 720 Indiana newspaper pieces, including 273 articles promoting specific Wild West performances, 74 substantive pieces documenting locally-based reception to these performances, and 373 extraneous items, including advertisements, images, and reprints of articles generated elsewhere.  In total, the team transcribed approximately 740 items (R = Reception; P = Promotion; E = Extraneous)
+
+Use this link to read more about the project and the historical context: [https://docs.google.com/document/d/1LnmyCob5zc984EkMAx3sXlXQqhNbm9O8XV4O3HrQUbQ/edit?usp=sharing](https://docs.google.com/document/d/1LnmyCob5zc984EkMAx3sXlXQqhNbm9O8XV4O3HrQUbQ/edit?usp=sharing)
+
+You should use the rest of this worksheet to practice text analysis (and R more broadly) by exploring this dataset. Using the metadata provided and the raw text files can you use what you learned above to analyze these texts? What historical conclusions might you be able to draw? Perform the textual analysis and then write up your findings for Dr. Seefeldt. What might he be able to draw from this analysis? I will then take your work, compile it, and share it with him. Here are 3 research questions to get started. You can use one of these or come up with your own. 
+
+* Is there a difference in promotion language vs. reception language. In other words, what was BBWW selling and what did Indiana newspapers find remarkable.
+* Can we detect some change over time in promotion language and reception language (marketing and reviewing)? Were there types of characters, scenarios, action promised in promotional material and/or noted in reviews earlier vs later?
+* What can be gleaned from the items tagged as extraneous as far as topics? These are news items that are somehow related to BBWW. Crime, finances, celebrity, etc.
+
+
+Write up a research plan in the space below. What are you looking to explore?
+
+> 
+
+Lets download the data. 
 ```{r}
 #| eval: false
 #zip file of all the .txt files. One for each issue. 
-download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/txt.zip?raw=true", "MindAndBody.zip")
-unzip("MindAndBody.zip")
+download.file("https://github.com/dseefeldt/IndianaNewspapers/raw/main/bb-txt.zip", "bb-txt.zip")
+unzip("bb-txt.zip")
 
-# Metadata that includes info about each issue.
-metadata <- read.csv("https://raw.githubusercontent.com/regan008/8510-TextAnalysisData/main/Metadata.csv")
+# Metadata that includes info about each article.
+bb.metadata <- read.csv("https://raw.githubusercontent.com/dseefeldt/IndianaNewspapers/main/metadata.csv")
 ```
 
-(@) Add code chunks below and intersperse text to explain what you are doing and why. 
+(@) There are a few problems with this metadata from a tidy data perspective. First the date column isn't useful for assessing change over time. Can you split it into 3 columns one for year, month, and day? This will be useful if you want to try and identify change over time. Use the Date column not the FullDate column. This column is messy and you'll need to clean it up in order to have useful data. 
+```{r}
+```
+
+(@) Now lets load the BB data. This happens in a slightly different way than with the SOTU data since its local data and not data from an R package. 
+```{r}
+data_dir <- paste(getwd(), "/txt", sep = "")
+bb <- readtext(paste0(data_dir, "/*.txt"))
+```
+
+(@) Now you need to join this with the metadata for each file. Note that doc_id and Filename are the same value. How would you join two datasets together in R so that you can proceed with textual analysis? 
+```{r}
+
+```
+
+(@) Now you can begin your textual analysis for Dr. S. Add code chunks below and intersperse text to explain what you are doing and why in the text of the worksheet. 
+```{r}
+
+
+```
+
+
+(@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
+
+
+
+
+
+
+
 
 
